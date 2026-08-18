@@ -1,0 +1,41 @@
+/*
+The objective of this script is to set up a clean, structured foundation for a Data Warehouse using the industry-standard Medallion Architecture (Multi-Hop Architecture).
+
+What the Script Does
+Environment Reset (Idempotency):
+
+Checks if an older version of the DataWarehouse database exists.
+
+Kills any active user connections immediately and deletes it to ensure you start from a 100% clean state without leftover test tables or broken dependencies.
+
+Database Provisioning:
+
+Creates a brand-new, empty DataWarehouse database.
+
+Data Layering (Logical Separation):
+
+Defines three distinct schemas (bronze, silver, gold) to organize data by its level of quality and readiness.
+*/
+
+
+USE master;
+GO
+
+IF EXISTS (SELECT 1 FROM sys.databases WHERE name = 'DataWarehouse')
+BEGIN
+	ALTER DATABASE DataWarehouse SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+	DROP DATABASE DataWarehouse;
+	END;
+	GO
+
+USE DataWarehouse;
+GO
+
+CREATE SCHEMA bronze;
+GO
+
+CREATE SCHEMA silver;
+GO
+
+CREATE SCHEMA gold;
+GO
